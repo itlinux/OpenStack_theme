@@ -1,0 +1,38 @@
+= OpenStack Theme Creation for RDO (PackStack and OOO )
+This process has been tested on Ocata (OOO).
+
+== Backup your data
+Make sure you backup your data before you make any changes
+
+== Directory
+cd to /usr/share/openstack-dashboard/openstack_dashboard/themes and create a new folder for your new theme.
+
+----
+mkdir remo
+cd remo
+echo ""@import "/themes/default/variables";" > _variables.scss
+echo ""@import "/themes/default/styles";" >   _styles.scss
+
+mkdir img
+----
+== Create New logo
+Create a new login logo and a top logo in the format of .svg
+Use the following URL if you have a PNG to convert it to svg
+
+https://www.aconvert.com/image/jpg-to-svg/
+
+I use the link above and works very well
+
+=== Logo
+Save the login logo as
+
+**logo-splash.png**
+
+Save the top logo as
+
+**logo.svg**
+
+
+=== Restart httpd
+[service, restart httpd]
+systemctl restart httpd 
