@@ -1,0 +1,30 @@
+---
+- hosts: controllers
+  become: yes
+  remote_user: heat-admin
+  tasks:
+    - name: editing openstack local config
+      blockinfile:
+       path: /etc/openstack-dashboard/local_settings
+       marker: "#<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+       insertafter: '#CUSTOM_THEME_PATH'
+       content: |
+          DEFAULT_THEME = 'avast'
+          AVAILABLE_THEMES = [
+          ('default', 'Default', 'themes/default'),
+          ('material', 'Material', 'themes/material'),
+          ('avast', 'Remo', 'themes/remo'),
+           ]
+      tags: edit_local_settings
+    - name: copy  theme
+      copy:
+        src: openstack-horizon-avast-theme/
+        dest: /usr/share/openstack-dashboard/openstack_dashboard/themes/
+        owner: root
+        group: root
+        directory_mode: yes
+      tags: theme
+
+    - name: restart httpd
+      command: systemctl restart httpd
+

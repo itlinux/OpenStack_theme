@@ -48,3 +48,12 @@ Add the followings:
 === Restart httpd
 [source, restart httpd]
 systemctl restart httpd
+
+
+=== Ansible Use
+
+If you want to use the ansible script you need to make sure to add the images into the img folder and make sure you have the info into the _variables.scss.  There are a few tags if you want to check it before you push them up you can alawys do that with 
+
+.Playbook usage
+[source, playbook]
+ansible-playbook -i hosts copy-theme-files.yaml --check 
