@@ -1,7 +1,6 @@
----
 - hosts: controllers
   become: yes
-  remote_user: heat-admin
+  remote_user: vagrant
   tasks:
     - name: editing openstack local config
       blockinfile:
@@ -9,12 +8,16 @@
        marker: "#<!-- {mark} ANSIBLE MANAGED BLOCK -->"
        insertafter: '#CUSTOM_THEME_PATH'
        content: |
-          DEFAULT_THEME = 'remo'
+          DEFAULT_THEME = 'Juve'
           AVAILABLE_THEMES = [
           ('default', 'Default', 'themes/default'),
           ('material', 'Material', 'themes/material'),
-          ('Remo', 'Remo', 'themes/remo'),
+          ('Juve', 'Juventus', 'themes/juventus'),
            ]
+          LAUNCH_INSTANCE_DEFAULTS = {
+           'create_volume': False,
+           }
+          SITE_BRANDING = 'Juventus, Inc. Cloud'
       tags: edit_local_settings
     - name: copy  theme
       copy:
@@ -27,4 +30,3 @@
 
     - name: restart httpd
       command: systemctl restart httpd
-
