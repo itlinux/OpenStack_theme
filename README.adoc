@@ -37,12 +37,13 @@ Edit the /etc/openstack-dashboard/local_settings
 
 Add the followings:
 ----
- DEFAULT_THEME = 'remo'
- AVAILABLE_THEMES = [
-         ('default', 'Default', 'themes/default'),
-         ('material', 'Material', 'themes/material'),
-         ('remo', 'Remo', 'themes/remo'),
-    ]
+ DEFAULT_THEME = 'Juve'
+          AVAILABLE_THEMES = [
+          ('default', 'Default', 'themes/default'),
+          ('material', 'Material', 'themes/material'),
+          ('Juve', 'Juventus', 'themes/juventus'),
+           ]
+          SITE_BRANDING = 'Juventus, Inc. Cloud'
 ----
 
 === Restart httpd
