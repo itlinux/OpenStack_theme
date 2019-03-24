@@ -1,10 +1,11 @@
 = OpenStack Theme Creation for RDO (PackStack and OOO )
-This process has been tested on Ocata (OOO).
 
-== Backup your data
+This process has been tested on Ocata, Pike (OOO) and Rocky (PackStack)
+== Manual Steps
+===  Backup your data
 Make sure you backup your data before you make any changes
 
-== Directory
+===  Directory
 cd to /usr/share/openstack-dashboard/openstack_dashboard/themes and create a new folder for your new theme.
 
 ----
@@ -15,7 +16,7 @@ echo ""@import "/themes/default/styles";" >   _styles.scss
 
 mkdir img
 ----
-== Create New logo
+===  Create New logo
 Create a new login logo and a top logo in the format of .svg
 Use the following URL if you have a PNG to convert it to svg
 
@@ -23,7 +24,7 @@ https://www.aconvert.com/image/jpg-to-svg/
 
 I use the link above and works very well
 
-=== Logo
+====  Logo
 Save the login logo as
 
 **logo-splash.svg**
@@ -32,7 +33,7 @@ Save the top logo as
 
 **logo.svg**
 
-=== Update the local_settings
+====  Update the local_settings
 Edit the /etc/openstack-dashboard/local_settings
 
 Add the followings:
@@ -46,9 +47,56 @@ Add the followings:
           SITE_BRANDING = 'Juventus, Inc. Cloud'
 ----
 
-=== Restart httpd
+====  Restart httpd
 [source, restart httpd]
 systemctl restart httpd
+
+== Using Ansible Playbook
+
+.Playbook to add theme, remove volume creation by default and add Site title
+----
+- hosts:  packstack
+  become: yes
+  remote_user: remo
+  tasks:
+    - name: editing openstack local config
+      blockinfile:
+       path: /etc/openstack-dashboard/local_settings
+       marker: "#<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+       insertafter: '#CUSTOM_THEME_PATH'
+       content: |
+          DEFAULT_THEME = 'Avi'
+          AVAILABLE_THEMES = [
+          ('default', 'Default', 'themes/default'),
+          ('material', 'Material', 'themes/material'),
+          ('Avi', 'Avi Networks', 'themes/avi'),
+           ]
+
+          LAUNCH_INSTANCE_DEFAULTS = {
+           'create_volume': False,
+           }
+          SITE_BRANDING = 'Avi Networks'
+      tags: edit_local_settings
+    - name: create_volume changes
+      replace:
+        path: /etc/openstack-dashboard/local_settings
+        regexp: "'create_volume': True,"
+        replace: "'create_volume': False,"
+      changed_when: True
+      tags: create
+
+    - name: copy  theme
+      copy:
+        src: avi
+        dest: /usr/share/openstack-dashboard/openstack_dashboard/themes/
+        owner: root
+        group: root
+        directory_mode: yes
+      tags: theme
+
+    - name: restart httpd
+      command: systemctl restart httpd
+----
 
 
 === Ansible Use
@@ -57,4 +105,4 @@ If you want to use the ansible script you need to change the imags from the img 
 
 .Playbook usage
 [source, playbook]
-ansible-playbook -i hosts remo-theme-os-local.yaml --check
+ansible-playbook -i hosts remo-theme-os-local.yaml -C --diff
