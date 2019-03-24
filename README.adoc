@@ -67,17 +67,17 @@ systemctl restart httpd
        marker: "#<!-- {mark} ANSIBLE MANAGED BLOCK -->"
        insertafter: '#CUSTOM_THEME_PATH'
        content: |
-          DEFAULT_THEME = 'Avi'
+          DEFAULT_THEME = 'Juve'
           AVAILABLE_THEMES = [
           ('default', 'Default', 'themes/default'),
           ('material', 'Material', 'themes/material'),
-          ('Avi', 'Avi Networks', 'themes/avi'),
+          ('Juve', 'Juventus', 'themes/juventus'),
            ]
 
           LAUNCH_INSTANCE_DEFAULTS = {
            'create_volume': False,
            }
-          SITE_BRANDING = 'Avi Networks'
+          SITE_BRANDING = 'Juventus FC'
       tags: edit_local_settings
     - name: create_volume changes
       replace:
