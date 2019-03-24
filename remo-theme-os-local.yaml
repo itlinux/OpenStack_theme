@@ -1,6 +1,6 @@
-- hosts: controllers
+- hosts:  packstack
   become: yes
-  remote_user: vagrant
+  remote_user: remo
   tasks:
     - name: editing openstack local config
       blockinfile:
@@ -8,20 +8,29 @@
        marker: "#<!-- {mark} ANSIBLE MANAGED BLOCK -->"
        insertafter: '#CUSTOM_THEME_PATH'
        content: |
-          DEFAULT_THEME = 'Juve'
+          DEFAULT_THEME = 'Avi'
           AVAILABLE_THEMES = [
           ('default', 'Default', 'themes/default'),
           ('material', 'Material', 'themes/material'),
-          ('Juve', 'Juventus', 'themes/juventus'),
+          ('Avi', 'Avi Networks', 'themes/avi'),
            ]
+
           LAUNCH_INSTANCE_DEFAULTS = {
            'create_volume': False,
            }
-          SITE_BRANDING = 'Juventus, Inc. Cloud'
+          SITE_BRANDING = 'Avi Networks'
       tags: edit_local_settings
+    - name: create_volume changes
+      replace:
+        path: /etc/openstack-dashboard/local_settings
+        regexp: "'create_volume': True,"
+        replace: "'create_volume': False,"
+      changed_when: True
+      tags: create
+
     - name: copy  theme
       copy:
-        src: openstack-horizon-remo-theme/
+        src: avi
         dest: /usr/share/openstack-dashboard/openstack_dashboard/themes/
         owner: root
         group: root
