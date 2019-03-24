@@ -1,7 +1,9 @@
 = OpenStack Theme Creation for RDO (PackStack and OOO )
 
 This process has been tested on Ocata, Pike (OOO) and Rocky (PackStack)
+
 == Manual Steps
+
 ===  Backup your data
 Make sure you backup your data before you make any changes
 
